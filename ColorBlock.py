@@ -5,4 +5,5 @@ class ColorBlock :
         self.posY = posY
         self.color = color
 
-    
+    def getColor(self) :
+        return self.color
