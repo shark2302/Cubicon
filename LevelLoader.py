@@ -1,4 +1,6 @@
 from Player import Player
+from Color import Color
+from ColorBlock import ColorBlock
 class LevelLoader :
 
 
@@ -17,6 +19,17 @@ class LevelLoader :
                     s.append(int(char))
                     if int(char) == 4 :
                         self.player = Player(fileData.index(each), s.index(int(char)))
+                        index = s.index(int(char))
+                        s.remove(int(char))
+                        s.insert(index, 0)
+                    if int(char) == 2 :
+                        index = s.index(int(char))
+                        s.remove(int(char))
+                        s.insert(index, ColorBlock(fileData.index(each), index, Color.PINK))
+                    if int(char) == 3 :
+                        index = s.index(int(char))
+                        s.remove(int(char))
+                        s.insert(index, ColorBlock(fileData.index(each), index, Color.BLUE))
                 lvl.append(s)
             self.levelMap = lvl
         createLevelMap()

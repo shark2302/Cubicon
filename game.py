@@ -2,6 +2,8 @@ import pygame, sys
 from pygame.locals import *
 from Player import Player
 from LevelLoader import LevelLoader
+from ColorBlock import ColorBlock
+from Color import Color
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -37,10 +39,11 @@ def drawLevel(lvl, screen) :
         for each in string :
             if each == 1 :
                 pygame.draw.rect(screen, GRAY, (x, y, 50, 50))
-            elif each == 2 :
-                pygame.draw.rect(screen, PINK, (x, y, 50, 50))
-            elif each == 3 :
-                pygame.draw.rect(screen, LIGHT_BLUE, (x, y, 50, 50))
+            if type(each) == ColorBlock :
+                if each.getColor() == Color.PINK :
+                    pygame.draw.rect(screen, PINK, (x, y, 50, 50))
+                if each.getColor() == Color.BLUE :
+                    pygame.draw.rect(screen, LIGHT_BLUE, (x, y, 50, 50))
             pygame.draw.rect(screen, BLACK, (x, y, 50, 50), 1)
             x+=50
         y += 50
@@ -59,6 +62,7 @@ bgColor = (255,255,255)
 mainLoop = True
 
 
+
 while mainLoop:
     screen.fill(bgColor)
     drawLevel(lvl.getLevelMap(), screen)
@@ -69,13 +73,13 @@ while mainLoop:
             mainLoop = False
         elif event.type == pygame.KEYDOWN :
             if event.key == pygame.K_UP :
-                player.moveUp(lvl.getLevelMap())
+                player.moveUp(lvl)
             if event.key == pygame.K_DOWN :
-                player.moveDown(lvl.getLevelMap())
+                player.moveDown(lvl)
             if event.key == pygame.K_RIGHT :
-                player.moveRight(lvl.getLevelMap())
+                player.moveRight(lvl)
             if event.key == pygame.K_LEFT :
-                player.moveLeft(lvl.getLevelMap())
+                player.moveLeft(lvl)
     clock.tick(FPS)
 
 pygame.quit()
