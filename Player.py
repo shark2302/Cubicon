@@ -9,10 +9,10 @@ class Player :
         if lvl.getLevelMap()[self.posX - 1][self.posY] == 0 :
             self.posX -= 1
         elif type(lvl.getLevelMap()[self.posX - 1][self.posY]) == ColorBlock and lvl.getLevelMap()[self.posX - 2][self.posY] == 0 :
-            print(lvl.getLevelMap())
+            
             lvl.getLevelMap()[self.posX - 1][self.posY].moveUp(lvl)
             self.posX -= 1
-            print(lvl.getLevelMap())
+
 
     def moveDown(self, lvl) :
         if lvl.getLevelMap()[self.posX + 1][self.posY] == 0 :

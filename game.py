@@ -44,30 +44,80 @@ def drawLevel(lvl, screen) :
                     pygame.draw.rect(screen, PINK, (x, y, 50, 50))
                 if each.getColor() == Color.BLUE :
                     pygame.draw.rect(screen, LIGHT_BLUE, (x, y, 50, 50))
-            pygame.draw.rect(screen, BLACK, (x, y, 50, 50), 1)
+                if each.getColor() == Color.YELLOW :
+                    pygame.draw.rect(screen, YELLOW, (x, y, 50, 50))
+                if each.getColor() == Color.GREEN :
+                    pygame.draw.rect(screen, GREEN, (x, y, 50, 50))
+            if each != 0 :
+                pygame.draw.rect(screen, BLACK, (x, y, 50, 50), 1)
             x+=50
         y += 50
         x = 100
 
+def stringSearch(lvl, color) :
+    for string in lvl.getLevelMap() :
+        for num in string :
+            if type(num) == ColorBlock and num.getColor() == color:
+                i = string.index(num) + 1
+                s = []
+                s.append(num)
+                while type(lvl.getLevelMap()[lvl.getLevelMap().index(string)][i]) == ColorBlock and lvl.getLevelMap()[lvl.getLevelMap().index(string)][i].getColor() == color :
+                    s.append(lvl.getLevelMap()[lvl.getLevelMap().index(string)][i])
+                    i += 1
+                if len(lvl.getColorBlocks().get(color)) == len(s) :
+                    return True
+                continue
+    return False
+
+def colomnSearch(lvl, color) :
+    for i in range(len(lvl.getLevelMap()[0])) :
+        for j in range(len(lvl.getLevelMap())) :
+            if type(lvl.getLevelMap()[j][i]) == ColorBlock and lvl.getLevelMap()[j][i].getColor() == color :
+                k = j + 1
+                s = []
+                s.append(lvl.getLevelMap()[j][i])
+                while type(lvl.getLevelMap()[k][i]) == ColorBlock and lvl.getLevelMap()[k][i].getColor() == color :
+                    s.append(lvl.getLevelMap()[k][i])
+                    k += 1
+                    if len(lvl.getColorBlocks().get(color)) == len(s) :
+                        return True
+                    break
+    return False
 
 
+def checkWin(lvl) :
+    for color in lvl.getColorBlocks().keys() :
+        if len(lvl.getColorBlocks().get(color)) == 0 :
+            continue
+        if stringSearch(lvl, color) == False and colomnSearch(lvl, color) == False:
+            return False
+    return True
 
 pygame.init()
 clock = pygame.time.Clock()
-lvl = LevelLoader("levels/level1.txt")
+lvl = LevelLoader()
+lvl.loadLevel(1)
 player = lvl.getPlayer()
+colorBlocks = lvl.getColorBlocks()
 screen = pygame.display.set_mode((600,600))
 pygame.display.set_caption("Cubecon");
 bgColor = (255,255,255)
 mainLoop = True
-
+levelNum = 1
 
 
 while mainLoop:
+    if checkWin(lvl):
+        levelNum += 1
+        lvl.loadLevel(levelNum)
+        player = lvl.getPlayer()
+
+
     screen.fill(bgColor)
     drawLevel(lvl.getLevelMap(), screen)
     drawPlayer(player, screen)
     pygame.display.update()
+
     for event in pygame.event.get():
         if event.type == QUIT:
             mainLoop = False
