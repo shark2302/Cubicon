@@ -4,6 +4,7 @@ from Player import Player
 from LevelLoader import LevelLoader
 from ColorBlock import ColorBlock
 from Color import Color
+from Button import Button
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -104,7 +105,9 @@ pygame.display.set_caption("Cubecon");
 bgColor = (255,255,255)
 mainLoop = True
 levelNum = 1
-
+restartButton = Button(GREEN, 5, 5, 100, 50, "Restart");
+nextLvlBtn = Button(GREEN, 110, 5, 100, 50, "Next")
+prevLvlBtn = Button(GREEN, 220, 5,100, 50, "Prev")
 
 while mainLoop:
     if checkWin(lvl):
@@ -114,6 +117,9 @@ while mainLoop:
 
 
     screen.fill(bgColor)
+    restartButton.draw(screen, (0, 0, 0))
+    nextLvlBtn.draw(screen, (0,0,0))
+    prevLvlBtn.draw(screen, (0,0,0))
     drawLevel(lvl.getLevelMap(), screen)
     drawPlayer(player, screen)
     pygame.display.update()
@@ -130,6 +136,18 @@ while mainLoop:
                 player.moveRight(lvl)
             if event.key == pygame.K_LEFT :
                 player.moveLeft(lvl)
+        elif event.type == pygame.MOUSEBUTTONDOWN :
+            if restartButton.isOver(pygame.mouse.get_pos()) :
+                lvl.loadLevel(1)
+                player = lvl.getPlayer();
+            if nextLvlBtn.isOver(pygame.mouse.get_pos()) and levelNum < 2 :
+                levelNum += 1
+                lvl.loadLevel(levelNum)
+                player = lvl.getPlayer();
+            if prevLvlBtn.isOver(pygame.mouse.get_pos()) and levelNum != 1 :
+                levelNum -= 1
+                lvl.loadLevel(levelNum)
+                player = lvl.getPlayer();
     clock.tick(FPS)
 
 pygame.quit()
